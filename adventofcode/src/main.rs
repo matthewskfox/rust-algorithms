@@ -19,8 +19,9 @@ fn main() -> io::Result<()> {
     println!("Running Year {} - Day {}.{}", args.year, args.day, args.part);
 
     let result = match (args.year, args.day, args.part) {
-        (2025, 1, 1) => adventofcode::year2025::day01::solve1()?,
-        (2025, 1, 2) => adventofcode::year2025::day01::solve2()?,
+        (2025, 1, 1) => adventofcode::year2025::day01::solve1()?.to_string(),
+        (2025, 1, 2) => adventofcode::year2025::day01::solve2()?.to_string(),
+        (2025, 2, 1) => adventofcode::year2025::day02::solve1()?.to_string(),
 
         _ => {
             eprintln!("Error: Solution for Year {} Day {}.{} is not implemented yet.", args.year, args.day, args.part);
