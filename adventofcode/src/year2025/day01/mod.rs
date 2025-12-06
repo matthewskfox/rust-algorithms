@@ -1,4 +1,4 @@
-use std::fs;
+use std::{fs, i32};
 use std::io::{self, BufRead};
 
 use crate::local_path;
@@ -47,6 +47,27 @@ impl Rotation {
         // Add DIAL_SIZE before mod to handle negative numbers correctly
         ((new_position % DIAL_SIZE) + DIAL_SIZE) % DIAL_SIZE
     }
+
+    fn count_zeros_during_rotation(&self, start_position: i32) -> i32 {
+        if self.distance == 0 {
+            return 0;
+        }
+
+        let end_position = self.apply(start_position);
+        let complete_loops = self.distance / DIAL_SIZE;
+
+        let crosses_zero = match self.direction {
+            // For leftward movement, if we start at 0, that is not crossing
+            Direction::Left => start_position < end_position && start_position != 0,
+            Direction::Right => end_position < start_position,
+        };
+
+        let lands_on_zero  = end_position == 0 && start_position != 0;
+
+        let partial_crosses = if crosses_zero || lands_on_zero  { 1 } else { 0 };
+
+        complete_loops + partial_crosses
+    }
 }
 
 fn count_zero_positions(rotations: &[Rotation]) -> usize {
@@ -58,6 +79,18 @@ fn count_zero_positions(rotations: &[Rotation]) -> usize {
         if position == 0 {
             zero_count += 1;
         }
+    }
+
+    zero_count
+}
+
+fn count_zero_crossings(rotations: &[Rotation]) -> usize {
+    let mut position = STARTING_POSITION;
+    let mut zero_count = 0;
+
+    for rotation in rotations {
+        zero_count += rotation.count_zeros_during_rotation(position) as usize;
+        position = rotation.apply(position);
     }
 
     zero_count
@@ -81,6 +114,15 @@ pub fn solve1() -> io::Result<usize> {
 
     let rotations = read_rotations_from_file(&file_path)?;
     let result = count_zero_positions(&rotations);
+
+    Ok(result)
+}
+
+pub fn solve2() -> io::Result<usize> {
+    let file_path = local_path!();
+
+    let rotations = read_rotations_from_file(&file_path)?;
+    let result = count_zero_crossings(&rotations);
 
     Ok(result)
 }
@@ -146,5 +188,31 @@ mod tests {
         let r = Rotation::parse("R48").unwrap();
         pos = r.apply(pos);
         assert_eq!(pos, 0);
+    }
+
+    #[test]
+    fn test_count_zero_crossings() {
+        let rotations = vec![
+            Rotation::parse("L68").unwrap(),
+            Rotation::parse("L30").unwrap(),
+            Rotation::parse("R48").unwrap(),
+            Rotation::parse("L5").unwrap(),
+            Rotation::parse("R60").unwrap(),
+            Rotation::parse("L55").unwrap(),
+            Rotation::parse("L1").unwrap(),
+            Rotation::parse("L99").unwrap(),
+            Rotation::parse("R14").unwrap(),
+            Rotation::parse("L82").unwrap(),
+        ];
+
+        let result = count_zero_crossings(&rotations);
+        assert_eq!(result, 6);
+    }
+
+    #[test]
+    fn test_large_rotation() {
+        let rotation = Rotation::parse("R1000").unwrap();
+        let zeros = rotation.count_zeros_during_rotation(50);
+        assert_eq!(zeros, 10);
     }
 }

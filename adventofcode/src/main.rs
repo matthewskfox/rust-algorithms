@@ -20,6 +20,7 @@ fn main() -> io::Result<()> {
 
     let result = match (args.year, args.day, args.part) {
         (2025, 1, 1) => adventofcode::year2025::day01::solve1()?,
+        (2025, 1, 2) => adventofcode::year2025::day01::solve2()?,
 
         _ => {
             eprintln!("Error: Solution for Year {} Day {}.{} is not implemented yet.", args.year, args.day, args.part);
