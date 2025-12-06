@@ -1,0 +1,12 @@
+[workspace]
+resolver = "2"
+members = [
+    "adventofcode",
+]
+
+[workspace.package]
+edition = "2024"
+authors = ["Matthew S K Fox <matthewskfox@gmail.com>"]
+license = "BSD-3-Clause"
+
+[workspace.dependencies]

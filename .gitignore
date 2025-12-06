@@ -1,0 +1,12 @@
+# Ignore Rust build artifacts
+/target/
+Cargo.lock
+
+# Ignore IDE & Editor configurations
+.vscode/
+.idea/
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+desktop.ini
