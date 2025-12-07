@@ -3,28 +3,26 @@ use std::{fs, io};
 use crate::local_path;
 
 fn has_matching_halves(id: u64) -> bool {
-    let id_string = id.to_string();
-    let digit_count = id_string.len();
+    let digit_count = if id == 0 { 1 } else { id.ilog10() + 1 };
 
     if digit_count % 2 != 0 {
         return false;
     }
 
     let midpoint = digit_count / 2;
-    let (first_half, second_half) = id_string.split_at(midpoint);
+    let divisor = 10u64.pow(midpoint);
+
+    let first_half = id / divisor;
+    let second_half = id % divisor;
 
     first_half == second_half
 }
 
 fn parse_range(range_str: &str) -> Option<(u64, u64)> {
-    let parts: Vec<&str> = range_str.split('-').collect();
+    let (start_str, end_str) = range_str.split_once('-')?;
 
-    if parts.len() != 2 {
-        return None;
-    }
-
-    let start = parts[0].parse::<u64>().ok()?;
-    let end = parts[1].parse::<u64>().ok()?;
+    let start = start_str.parse().ok()?;
+    let end = end_str.parse().ok()?;
 
     Some((start, end))
 }
