@@ -3,19 +3,33 @@ use std::{fs, io};
 use crate::local_path;
 
 fn has_matching_halves(id: u64) -> bool {
-    let digit_count = if id == 0 { 1 } else { id.ilog10() + 1 };
+    let digit_count = count_digits(id);
 
-    if digit_count % 2 != 0 {
+    if !has_even_digit_count(digit_count) {
         return false;
     }
 
+    let (first_half, second_half) = split_number_in_half(id, digit_count);
+
+    first_half == second_half
+}
+
+fn count_digits(n: u64) -> u32 {
+    if n == 0 { 1 } else { n.ilog10() + 1 }
+}
+
+fn has_even_digit_count(digit_count: u32) -> bool {
+    digit_count % 2 == 0
+}
+
+fn split_number_in_half(n: u64, digit_count: u32) -> (u64, u64) {
     let midpoint = digit_count / 2;
     let divisor = 10u64.pow(midpoint);
 
-    let first_half = id / divisor;
-    let second_half = id % divisor;
+    let first_half = n / divisor;
+    let second_half = n % divisor;
 
-    first_half == second_half
+    (first_half, second_half)
 }
 
 fn parse_range(range_str: &str) -> Option<(u64, u64)> {
