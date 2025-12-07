@@ -78,31 +78,19 @@ where
         .sum()
 }
 
-fn calculate_matching_halves_sum(file_path: &str) -> io::Result<u64> {
+pub fn solve1() -> io::Result<u64> {
+    let file_path = local_path!();
     let ranges = fs::read_to_string(file_path)?;
 
     let result = sum_matching_ids(&ranges, has_matching_halves);
     Ok(result)
 }
 
-fn calculate_repeated_pattern_sum(file_path: &str) -> io::Result<u64> {
+pub fn solve2() -> io::Result<u64> {
+    let file_path = local_path!();
     let ranges = fs::read_to_string(file_path)?;
 
     let result = sum_matching_ids(&ranges, has_repeated_pattern);
-    Ok(result)
-}
-
-pub fn solve1() -> io::Result<u64> {
-    let file_path = local_path!();
-
-    let result = calculate_matching_halves_sum(&file_path)?;
-    Ok(result)
-}
-
-pub fn solve2() -> io::Result<u64> {
-    let file_path = local_path!();
-
-    let result = calculate_repeated_pattern_sum(&file_path)?;
     Ok(result)
 }
 
