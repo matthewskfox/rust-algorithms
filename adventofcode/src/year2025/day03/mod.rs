@@ -3,23 +3,24 @@ use std::io::{self, BufRead};
 
 use crate::local_path;
 
-fn max_joltage_from_bank(bank: &str) -> u32 {
-    let mut digits = bank.chars().filter_map(|c| c.to_digit(10));
+fn find_max_two_digit_number(digits_str: &str) -> u32 {
+    let mut digits = digits_str.chars().filter_map(|c| c.to_digit(10));
 
-    let mut max_left = match digits.next() {
+    let mut max_first_digit = match digits.next() {
         Some(d) => d,
         None => return 0,
     };
-    let mut max_joltage = 0;
 
-    for current in digits {
-        let joltage = max_left * 10 + current;
-        max_joltage = max_joltage.max(joltage);
+    let mut max_number = 0;
 
-        max_left = max_left.max(current);
+    for second_digit in digits {
+        let number = max_first_digit * 10 + second_digit;
+        max_number = max_number.max(number);
+
+        max_first_digit = max_first_digit.max(second_digit);
     }
 
-    max_joltage
+    max_number
 }
 
 pub fn solve1() -> io::Result<u32> {
@@ -31,7 +32,7 @@ pub fn solve1() -> io::Result<u32> {
     let total = reader
         .lines()
         .filter_map(|line| line.ok())
-        .map(|line| max_joltage_from_bank(line.trim()))
+        .map(|line| find_max_two_digit_number(line.trim()))
         .sum();
 
     Ok(total)
@@ -43,14 +44,14 @@ mod tests {
 
     #[test]
     fn test_max_joltage_from_bank() {
-        assert_eq!(max_joltage_from_bank("987654321111111"), 98);
-        assert_eq!(max_joltage_from_bank("811111111111119"), 89);
-        assert_eq!(max_joltage_from_bank("234234234234278"), 78);
-        assert_eq!(max_joltage_from_bank("818181911112111"), 92);
+        assert_eq!(find_max_two_digit_number("987654321111111"), 98);
+        assert_eq!(find_max_two_digit_number("811111111111119"), 89);
+        assert_eq!(find_max_two_digit_number("234234234234278"), 78);
+        assert_eq!(find_max_two_digit_number("818181911112111"), 92);
 
-        assert_eq!(max_joltage_from_bank("12"), 12);
-        assert_eq!(max_joltage_from_bank("21"), 21);
-        assert_eq!(max_joltage_from_bank("99"), 99);
-        assert_eq!(max_joltage_from_bank("19"), 19);
+        assert_eq!(find_max_two_digit_number("12"), 12);
+        assert_eq!(find_max_two_digit_number("21"), 21);
+        assert_eq!(find_max_two_digit_number("99"), 99);
+        assert_eq!(find_max_two_digit_number("19"), 19);
     }
 }
