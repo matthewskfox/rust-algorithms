@@ -24,6 +24,7 @@ fn main() -> io::Result<()> {
         (2025, 2, 1) => adventofcode::year2025::day02::solve1()?.to_string(),
         (2025, 2, 2) => adventofcode::year2025::day02::solve2()?.to_string(),
         (2025, 3, 1) => adventofcode::year2025::day03::solve1()?.to_string(),
+        (2025, 3, 2) => adventofcode::year2025::day03::solve2()?.to_string(),
 
         _ => {
             eprintln!("Error: Solution for Year {} Day {}.{} is not implemented yet.", args.year, args.day, args.part);
